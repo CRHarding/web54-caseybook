@@ -4,6 +4,8 @@ import { Route, useHistory } from "react-router-dom";
 
 import PostForm from "./Components/PostForm";
 import Confirm from "./Components/Confirm";
+import Profile from "./Components/Profile";
+import Home from "./Components/Home";
 
 const initialUser = {
   firstName: "Casey",
@@ -39,19 +41,19 @@ function App() {
   
   const onSubmit = (e) => {
     e.preventDefault();
-    formValues.timeStamp = Date.now();
+    formValues.timeStamp = new Date();
     formValues.username = user.username;
     setUser({...user, posts: user.posts.concat(formValues)});
+    setFormValues(initialPostValues);
     history.push("/");
   }
 
   return (
     <div>
-      <header>
-        <h1>Welcome to CaseyBook</h1>
-        <h2>It's like Facebook only made by some guy named Casey</h2>
-      </header>
       <Route exact path="/">
+        <Home />
+      </Route>
+      <Route path="/post">
         <PostForm 
           onChange={onChange} 
           postValues={formValues} 
@@ -60,6 +62,9 @@ function App() {
       </Route>
       <Route path="/confirm">
         <Confirm handleClick={onSubmit} values={formValues} />
+      </Route>
+      <Route path="/profile">
+        <Profile user={user} />
       </Route>
     </div>
   );
