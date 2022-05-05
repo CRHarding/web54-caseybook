@@ -16,6 +16,7 @@ const Profile = (props) => {
             <h4>{post.title}</h4>
             <p>{post.timeStamp.toLocaleDateString()}</p>
             <p>{post.content}</p>
+            {post.editedTimeStamp && <p>Edited on: {post.editedTimeStamp.toLocaleDateString()} at {post.editedTimeStamp.toLocaleTimeString()}</p>}
             <Link to={`/post/${post.id}`}>Edit</Link>
           </div>
         )
