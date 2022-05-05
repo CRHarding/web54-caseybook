@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const Profile = (props) => {
   const { user } = props;
   return (
-    <div>
+    <div className="shadow usercard-wrapper">
       <h4>USER PROFILE PAGE BOOOOO YAH!</h4>
       <p>Welcome, {user.firstName} {user.lastName}</p>
       <h5>{user.username}</h5>
