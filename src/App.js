@@ -1,7 +1,8 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import { Route, useHistory, Link } from "react-router-dom";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import axios from "axios";
 
 import PostForm from "./Components/PostForm";
 import Confirm from "./Components/Confirm";
@@ -33,8 +34,31 @@ function App() {
   const [user, setUser] = useState(initialUser);
   const [formValues, setFormValues] = useState(initialPostValues);
   const [editing, setEditing] = useState(true);
+  const [friends, setFriends] = useState([]);
 
   const history = useHistory();
+
+  //https://randomuser.me/api/?results=5
+
+  useEffect(() => {
+    axios.get("https://randomuser.me/api/?results=5")
+      .then(res => {
+        const newUsers = res.data.results.map(user => {
+          return {
+            id: user.id.value,
+            firstName: user.name.first,
+            lastName: user.name.last,
+            username: user.login.username,
+            profilePic: user.picture.large,
+            email: user.email,
+            age: user.dob.age,
+            about: "Lorem ipsum dolor sit amet",
+            posts: []
+          }
+        })
+        setFriends(newUsers);
+      }).catch((err) => console.error(err))
+  }, [])
 
   const onChange = (e) => {
     const { name, value } = e.target;
@@ -80,6 +104,7 @@ function App() {
       <nav>
         <Link to="/post">CREATE A POST</Link>
         <Link to="/profile">PROFILE</Link>
+        <Link to="/users">USERS</Link>
       </nav>
       <Route exact path="/">
         <Home />
@@ -105,6 +130,11 @@ function App() {
       </Route>
       <Route path="/profile">
         <Profile user={user} />
+      </Route>
+      <Route path="/users">
+        {friends.map(friend => {
+          return <Profile user={friend} key={friend.id} />
+        })}
       </Route>
     </div>
   );
