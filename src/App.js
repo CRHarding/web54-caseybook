@@ -1,6 +1,7 @@
 import "./App.css";
 import React, { useState } from "react";
 import { Route, useHistory } from "react-router-dom";
+import { v4 as uuidv4 } from 'uuid';
 
 import PostForm from "./Components/PostForm";
 import Confirm from "./Components/Confirm";
@@ -43,6 +44,7 @@ function App() {
     e.preventDefault();
     formValues.timeStamp = new Date();
     formValues.username = user.username;
+    formValues.id = uuidv4();
     setUser({...user, posts: user.posts.concat(formValues)});
     setFormValues(initialPostValues);
     history.push("/");
