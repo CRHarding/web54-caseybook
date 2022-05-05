@@ -1,6 +1,6 @@
 import "./App.css";
-import React, { useState } from "react";
-import { Route, useHistory } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Route, useHistory, Link } from "react-router-dom";
 import { v4 as uuidv4 } from 'uuid';
 
 import PostForm from "./Components/PostForm";
@@ -77,6 +77,10 @@ function App() {
 
   return (
     <div>
+      <nav>
+        <Link to="/post">CREATE A POST</Link>
+        <Link to="/profile">PROFILE</Link>
+      </nav>
       <Route exact path="/">
         <Home />
       </Route>
