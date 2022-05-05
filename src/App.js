@@ -25,19 +25,26 @@ const initialPostValues = {
   content: "",
   title: "",
   comments: [],
-  tips: 0
+  tips: 0,
+  editedTimeStamp: ""
 }
 
 function App() {
   const [user, setUser] = useState(initialUser);
   const [formValues, setFormValues] = useState(initialPostValues);
+  const [editing, setEditing] = useState(true);
 
   const history = useHistory();
 
   const onChange = (e) => {
     const { name, value } = e.target;
-
     setFormValues({ ...formValues, [name]: value });
+  }
+
+  const onEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditing(false);
+    setFormValues({ ...formValues, [name]: value })
   }
   
   const onSubmit = (e) => {
@@ -47,7 +54,25 @@ function App() {
     formValues.id = uuidv4();
     setUser({...user, posts: user.posts.concat(formValues)});
     setFormValues(initialPostValues);
+    setEditing(true)
     history.push("/");
+  }
+
+  const onEditSubmit = (e, id) => {
+    e.preventDefault();
+    
+    const newPosts = user.posts.map(post => {
+      if (post.id === id) {
+        post.editedTimeStamp = new Date();
+        post.title = formValues.title;
+        post.content = formValues.content;
+        return post;
+      }
+      return post;
+    })
+    console.log(newPosts);
+    setUser({...user, posts: newPosts});
+    history.push("/profile")
   }
 
   return (
@@ -55,7 +80,16 @@ function App() {
       <Route exact path="/">
         <Home />
       </Route>
-      <Route path="/post">
+      <Route path={"/post/:id"}>
+        <PostForm 
+          posts={user.posts} 
+          onChange={onEditChange} 
+          onSubmit={onEditSubmit} 
+          postValues={formValues}
+          edit={editing}
+        />
+      </Route>
+      <Route exact path="/post">
         <PostForm 
           onChange={onChange} 
           postValues={formValues} 
